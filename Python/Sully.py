@@ -1,12 +1,15 @@
 import os
 
 i = 5
-filename = "Sully_%d.py" % (i - 1)
-src = 'import os\n\ni = %d\nfilename = "Sully_%%d.py" %% (i - 1)\nsrc = %r\n\nif i:\n\tfile = open(filename, "w")\n\tfile.write(src %% (i - 1, src))\n\tfile.close()\n\n\tos.system("python2 %%s" %% filename)\n'
+if os.path.isfile("Sully_%d.py" % (i)):
+	i -= 1
+
+filename = "Sully_%d.py" % (i)
+src = 'import os\n\ni = %d\nif os.path.isfile("Sully_%%d.py" %% (i)):\n\ti -= 1\n\nfilename = "Sully_%%d.py" %% (i)\nsrc = %r\n\nfile = open(filename, "w")\nfile.write(src %% (i, src))\nfile.close()\n\nif i:\n\tos.system("python2 %%s" %% filename)\n'
+
+file = open(filename, "w")
+file.write(src % (i, src))
+file.close()
 
 if i:
-	file = open(filename, "w")
-	file.write(src % (i - 1, src))
-	file.close()
-
 	os.system("python2 %s" % filename)
